@@ -40,7 +40,7 @@ See [src/notebooks/langgraph-supervisor.ipynb](src/notebooks/langgraph-superviso
 
 ## Project Structure
 
-```
+``` text
 .gitignore
 poetry.lock
 pyproject.toml
