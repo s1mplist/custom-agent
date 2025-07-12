@@ -11,7 +11,7 @@ from langgraph.pregel import Pregel
 from langchain.chat_models import init_chat_model
 
 # Typing imports
-from typing import Dict, Optional, Any
+from typing import Dict, List, Optional, Any
 
 class SupervisorAgent:
     """
@@ -21,8 +21,9 @@ class SupervisorAgent:
     """
     def __init__(self,
                  model_name: str,
-                 agents: Optional[list[Pregel]] = None,
-                 model_kwargs: Optional[Dict[str, Any]] = None
+                 agents: List[Pregel],
+                 model_kwargs: Optional[Dict[str, Any]] = None,
+                 supervisor_name: str = "supervisor"
                  ):
         
         """
@@ -32,13 +33,23 @@ class SupervisorAgent:
             agents (list[Pregel]): A list of agents that this supervisor will manage.
             kwargs (Optional[Dict[str, Any]]): Additional keyword arguments for configuration.
         """
+        self.logger = setup_logger(__name__)
+        self.logger.info("Initializing SupervisorAgent with model: %s", model_name)
 
         self.model_name = model_name
-        self.agents = agents if agents is not None else []
-
         self.model_kwargs = model_kwargs or {}
-        
         self.model = self._get_model()
+        
+        self.agents = agents or []
+        self.supervisor_name = supervisor_name
+        
+        self.supervisor_node = create_supervisor(
+            model=self.model,
+            agents=self.agents,
+            state_schema=AppStateSchema,
+            supervisor_name=self.supervisor_name
+        )
+        self.logger.info("SupervisorAgent initialized successfully.")        
     
     def _get_model(self):
         """
@@ -53,18 +64,3 @@ class SupervisorAgent:
         if isinstance(model, str):
             raise ValueError("model must be a LanguageModelLike instance, not a string. Please provide a valid model object.")
         return model
-    
-    
-    def get_supervisor(self):
-        """
-        Create a supervisor agent that manages multiple agents.
-        
-        Returns:
-            Runnable: A runnable supervisor agent.
-        """
-        return create_supervisor(
-            model=self.model,
-            agents=self.agents,
-            state_schema=AppStateSchema
-        )   
-    
