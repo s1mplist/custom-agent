@@ -1,4 +1,3 @@
-# README.md
 # langgraph-supervisor-with-agents
 
 A framework for orchestrating and supervising multiple AI agents using LangGraph and LangChain.
@@ -30,12 +29,10 @@ Example: Creating a supervisor agent
 
 ```python
 from langgraph_supervisor_with_agents.agents import SupervisorAgent
-from langgraph_supervisor_with_agents.schema.state import AppStateSchema
 
 supervisor_agent = SupervisorAgent(
-    model="openai:o4-mini",
-    agents=[],
-    state_schema=AppStateSchema
+    model_name="openai:o4-mini",
+    agents=[]
 ).get_supervisor()
 ```
 
@@ -44,16 +41,29 @@ See [src/notebooks/langgraph-supervisor.ipynb](src/notebooks/langgraph-superviso
 ## Project Structure
 
 ```
+.gitignore
+poetry.lock
+pyproject.toml
+README.md
 src/
+    .env
     langgraph_supervisor_with_agents/
+        __init__.py
+        main.py
         agents/
+            __init__.py
+            supervisor.py
         schema/
+            __init__.py
+            state.py
         utils/
+            __init__.py
+            logger.py
     notebooks/
         dev-notebook.ipynb
+        langgraph-introduction.ipynb
         langgraph-supervisor.ipynb
-tests/
-pyproject.toml
+    tests/
 ```
 
 ## Development
@@ -63,5 +73,3 @@ pyproject.toml
 - Run tests with `pytest`
 
 ## License
-
-MIT
