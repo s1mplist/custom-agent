@@ -18,6 +18,7 @@ class AppStateSchema(BaseModel):
     input: str = Field(description="The input provided to the agent.")
     messages: List[BaseMessage] = Field(description="A history of interactions with the agent.")
     topics: Optional[List[str]] = Field(description="The topics relevant to the agent's task.")
+    is_last_step: bool = Field(description="Flag indicating if this is the last step in the process.")
     remaining_steps: List[str] = Field(description="A list of calls that are pending execution.")
     executed_steps: List[str] = Field( description="A list of calls that have been executed.")
     global_context: Optional[Dict[str, Any]] = Field(description="Global context information for the agent.")
